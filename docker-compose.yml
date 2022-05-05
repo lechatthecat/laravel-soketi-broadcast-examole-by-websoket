@@ -89,7 +89,7 @@ services:
             app_net:
                 ipv4_address: 172.33.0.4
     redis:
-        image: grokzen/redis-cluster:latest
+        image: grokzen/redis-cluster:6.2.0
         ports:
          - "6379-6384:6379-6384"
         container_name: redis
