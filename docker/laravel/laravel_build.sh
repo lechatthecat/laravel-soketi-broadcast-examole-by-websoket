@@ -2,7 +2,7 @@
 composer self-update
 cd /laravel/sample_laravel
 chown -R www-data:www-data .
-chmod 777 storage
+chmod -R 777 storage
 npm install
 npm run dev 
 composer update
