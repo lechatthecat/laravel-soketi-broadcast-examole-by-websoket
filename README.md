@@ -19,7 +19,6 @@ Now you can broadcast a "TestEvent" by artisan command.
 ```
 $ docker-compose exec laravel ash
 # In the laravel container:
-$ sh -x /laravel_build.sh
 $ php artisan push:notice
 ```
 Now you can see that "TestEvent" is pushed to all clients who are subscribing to "testchannel".
