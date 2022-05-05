@@ -22,7 +22,7 @@ $ docker-compose exec laravel ash
 $ sh -x /laravel_build.sh
 $ php artisan push:notice
 ```
-Now you can see "TestEvent" is pushed to all clients who are subscribing to "testchannel".
+Now you can see that "TestEvent" is pushed to all clients who are subscribing to "testchannel".
 
 ### Why soketi for websocket?
 laravel-websoket ... soketi works faster and has better scalability (as of May 2022)  
