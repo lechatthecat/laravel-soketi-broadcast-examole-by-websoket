@@ -12,7 +12,7 @@ $ npm run watch
 ```
 Then see http://localhost:8080  
 You can see laravel is working on docker there.  
-This page is now subscribing to "testchannel".  
+That page is now subscribing to "testchannel" by websocket.  
   
 Now you can broadcast a "TestEvent" by artisan command.  
 **Open a new terminal**, then run these commands:
@@ -22,7 +22,7 @@ $ docker-compose exec laravel ash
 $ sh -x /laravel_build.sh
 $ php artisan push:notice
 ```
-Now you can see "TestEvent" is pushed to all clients who are "testchannel".
+Now you can see "TestEvent" is pushed to all clients who are subscribing to "testchannel".
 
 ### Why soketi for websocket?
 laravel-websoket ... soketi works faster and has better scalability (as of May 2022)  
