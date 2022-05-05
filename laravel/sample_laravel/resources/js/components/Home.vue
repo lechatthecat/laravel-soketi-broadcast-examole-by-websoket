@@ -28,8 +28,6 @@
             return {
                 num: 0,
                 messageReceived: [],
-                textareaValue: "",
-                conn: null
             }
         },
         mounted() {
