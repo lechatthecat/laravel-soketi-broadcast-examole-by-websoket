@@ -3,7 +3,7 @@
 Run this program as follows:
 ```
 $ git clone https://github.com/lechatthecat/laravel-soketi-broadcast-example-by-websocket
-$ cd laravel-soketi-broadcast-examole-by-websoket
+$ cd laravel-soketi-broadcast-example-by-websocket
 $ docker-compose up -d --build
 $ docker-compose exec laravel ash
 # In the laravel container:
