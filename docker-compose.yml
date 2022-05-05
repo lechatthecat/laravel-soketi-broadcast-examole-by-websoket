@@ -31,14 +31,16 @@ services:
             - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:z
         # Which network this container belongs to.
         networks:
-            - app_net
+            app_net:
+                ipv4_address: 172.33.0.2
     # The container of Laravel
     laravel:
         build:
             # Wnere to find the "Dockerfile".
             context: .
             dockerfile: docker/laravel/Dockerfile
-        working_dir: /laravel
+        # We will start from this directory when we enter this container
+        working_dir: /laravel/sample_laravel
         volumes:
             # Where the source code should be saved.
             - <<: *laravel-volume
@@ -51,10 +53,18 @@ services:
         # Wait until mydb container is ready.
         depends_on:
             - mydb
+            - redis
+            - soketi
         container_name: laravel
-        # Which network this container belongs to.
+        # What is written below is a command that will be executed when the build is finished.
+        # If you use this "command", you have monitor the build log 
+        # and change the end of the script:  
+        # command: sh -x /laravel_build.sh
+        # But "command" is commented out for now.
+        # Which network this container belongs to:
         networks:
-            - app_net
+            app_net:
+                ipv4_address: 172.33.0.3
     # nginx 1.17
     nginx:
         # image name
@@ -64,7 +74,8 @@ services:
         - laravel
         # Which port should be exposed
         ports:
-        - 8080:80
+            - 8080:80
+            - 6001:6001
         volumes:
         # Where to find the files to serve
         - *laravel-volume
@@ -75,10 +86,69 @@ services:
         container_name: nginx
         # Which network this container belongs to.
         networks:
-            - app_net
+            app_net:
+                ipv4_address: 172.33.0.4
+    redis:
+        image: grokzen/redis-cluster:latest
+        ports:
+         - "6379-6384:6379-6384"
+        container_name: redis
+        environment:
+            - "INITIAL_PORT=6379"
+            - "MASTERS=3"
+            - "SLAVES_PER_MASTER=1"
+            - "SENTINEL=false"
+            - "REDIS_CLUSTER_IP=0.0.0.0"
+            - "IP=0.0.0.0"
+            - "BIND_ADDRESS=0.0.0.0"
+        volumes:
+            - redis-store:/data
+            # - ./docker/redis/my.conf:/etc/redis/my.conf:z
+        networks:
+            app_net:
+                ipv4_address: 172.33.0.5
+    soketi:
+        build:
+            # Where to find the "Dockerfile".
+            context: .
+            dockerfile: docker/soketi/Dockerfile
+        container_name: soketi
+        command: sh -x /soketi_start.sh
+        stdin_open: true
+        tty: true
+        working_dir: /laravel/sample_laravel
+        volumes:
+            # Where the source code should be saved.
+            - <<: *laravel-volume
+            - ./logs:/var/log/supervisord
+            - ./docker/soketi/supervisor.conf:/etc/supervisor/supervisord.conf
+            - ./docker/soketi/soketi_config.json:/soketi_config.json
+            # Where the bash file is (which is executed for the build)
+            - ./docker/soketi/soketi_start.sh:/soketi_start.sh:z
+        environment:
+            - "DB_REDIS_DB=0"
+            - "DB_REDIS_KEY_PREFIX=app"
+            - "DB_REDIS_CLUSTER_NODES=[{'host':'172.33.0.4', 'port':'6379'}]"
+            - "ADAPTER_REDIS_PREFIX=app"
+            - "ADAPTER_REDIS_CLUSTER_MODE=true"
+            - "ADAPTER_DRIVER=redis"
+            #https://docs.soketi.app/app-management/introduction
+            #https://docs.soketi.app/app-management/array-driver
+            #https://docs.soketi.app/app-management/sql-drivers/mysql
+            - "APP_MANAGER_DRIVER=array"
+        depends_on:
+            - redis
+        networks:
+            app_net:
+                ipv4_address: 172.33.0.6
 networks:
     # Containers in same network can access each other by using its container name as host name
     app_net:
         driver: "bridge"
+        ipam:
+            #driver: default
+            config:
+            - subnet: 172.33.0.0/24
 volumes:
     db-store:
+    redis-store:
