@@ -1,4 +1,8 @@
 # laravel-soketi-broadcast-example-by-websocket
+## Prerequisites
+- Docker
+- docker-compose
+
 ## How to use
 Run this program as follows:
 ```
