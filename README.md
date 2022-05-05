@@ -30,5 +30,5 @@ Thruway ... This supports wamp v2, and it seems it is working good, but I feel d
 
 ### Notice
 Though I may update later, this project is using "sync" for its queue backend.  
-This is because this project is using redis cluster and [queue with redis cluster is  bit complicated](https://stackoverflow.com/questions/41091103/laravel-predis-redis-cluster-moved-no-connection-to-127-0-0-16379).  
+This is because this project is using redis cluster and [queue with redis cluster is a bit complicated](https://stackoverflow.com/questions/41091103/laravel-predis-redis-cluster-moved-no-connection-to-127-0-0-16379).  
 Depending on your situation, you may need to change the backend to "redis", DB or other choice.
