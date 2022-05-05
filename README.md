@@ -1,8 +1,8 @@
-# laravel-soketi-broadcast-example-by-websoket
+# laravel-soketi-broadcast-example-by-websocket
 ## How to use
 Run this program as follows:
 ```
-$ git clone https://github.com/lechatthecat/laravel-soketi-broadcast-example-by-websoket
+$ git clone https://github.com/lechatthecat/laravel-soketi-broadcast-example-by-websocket
 $ cd laravel-soketi-broadcast-examole-by-websoket
 $ docker-compose up -d --build
 $ docker-compose exec laravel ash
