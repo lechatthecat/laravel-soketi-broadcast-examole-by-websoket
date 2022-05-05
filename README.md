@@ -31,6 +31,8 @@ Now you can see that "TestEvent" is pushed to all clients who are subscribing to
 laravel-websoket ... soketi works faster and has better scalability (as of May 2022)  
 ratchet ... [ratchet doesn't support wamp v2](https://github.com/ratchetphp/Ratchet/issues/168#issuecomment-55339203), so you must find a client that supports wamp v1, or use [ocpp1.6](https://github.com/ratchetphp/Ratchet/issues/717). (as of May 2022)  
 Thruway ... This supports wamp v2, and it seems it is working good, but I feel documentation is not enough. (as of May 2022)  
+  
+See also: [laravel doc](https://laravel.com/docs/9.x/broadcasting#open-source-alternatives)
 
 ### Notice
 Though I may update later, this project is using "sync" for its queue backend.  
