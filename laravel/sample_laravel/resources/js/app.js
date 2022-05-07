@@ -25,7 +25,6 @@
  import VueAxios from 'vue-axios';
  import VueRouter from 'vue-router';
  import { routes } from './routes';
- import Home from './components/Home.vue';
  import Echo from 'laravel-echo';
  Vue.use(VueRouter);
  Vue.use(VueAxios, axios);
@@ -47,9 +46,12 @@
      routes: routes
  });
 
- console.log(process.env.MIX_PUSHER_APP_KEY);
- console.log(process.env.MIX_PUSHER_APP_CLUSTER);
- 
+//  console.log(process.env.MIX_PUSHER_APP_KEY);
+//  console.log(process.env.MIX_PUSHER_APP_CLUSTER);
+
+ // Component files
+ import App from './App'
+
  /**
   * Next, we will create a fresh Vue application instance and attach it to
   * the page. Then, you may begin adding components to this application
@@ -59,5 +61,5 @@
  const app = new Vue({
      el: '#app',
      router: router,
-     render: h => h(Home),
+     render: h => h(App),
  });
