@@ -33,6 +33,3 @@ But please note that number of concurrent connections toward the "stream" API (t
 You can see your browser hangs if you open 11th tab of https://localhost:8081/  
 The number of concurrent persistent connections can be increased by changing number of "pm.max_children = 10", but this number cannot be increased to a big number, or your server will crash. php-fpm conf file is here: {this project's root path}/docker/laravel/php-fpm.conf
   
-You can set "retry" parameter so that the EventResource retries calling the endpoint when no updated is detected, and remove the infinite loop from the endpoint so that we don't need to hold concurrent persistent connections, but wihtout concurrent persistent connections, this is just a "polling" in my opinion, not "server side events".
-
-For real server side events, I think you need something that can handle multiple concurrent persistent connections like Node.js.
