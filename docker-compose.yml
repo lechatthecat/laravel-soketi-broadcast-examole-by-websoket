@@ -50,6 +50,7 @@ services:
             - ./logs:/var/log/php
             # Where to load php.ini.
             - ./docker/laravel/php.ini:/usr/local/etc/php/php.ini
+            - ./docker/laravel/php-fpm.conf:/usr/local/etc/php-fpm.d/www.conf:z
         # Wait until mydb container is ready.
         depends_on:
             - mydb

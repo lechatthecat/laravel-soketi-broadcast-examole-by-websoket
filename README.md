@@ -7,34 +7,32 @@
 Run this program as follows:
 ```
 $ git clone https://github.com/lechatthecat/laravel-soketi-broadcast-example-by-websocket
+```
+Please note that the server is using http2, so you need "server.crt" and "server.key" in "{this project's root path}/docker/nginx/cert" for SSL connection.
+
+Also, you need a DB. Please access "mydb" container. The password of root is "root". Then create a database named as "laravel".
+
+After creating the certificate, please run these commands:
+```
 $ cd laravel-soketi-broadcast-example-by-websocket
 $ docker-compose up -d --build
 $ docker-compose exec laravel ash
 # In the laravel container:
 $ sh -x /laravel_build.sh
+$ php artisan migrate
 $ npm run watch
 ```
-Then see http://localhost:8080  
+Then see https://localhost:8081/
 You can see laravel is working on docker there.  
-That page is now subscribing to "testchannel" by websocket.  
+   
+Now you can broadcast a event by accessing this url from your browser:
+https://localhost:8081/api/store_message
+It is using server side events to broadcast the event.
+But this project (or SSE with PHP/PHP-fpm) is not so meaningful.   
   
-Now you can broadcast a "TestEvent" by artisan command.  
-**Open a new terminal**, then run these commands:
-```
-$ docker-compose exec laravel ash
-# In the laravel container:
-$ php artisan push:notice
-```
-Now you can see that "TestEvent" is pushed to all clients who are subscribing to "testchannel".
-
-### Why soketi for websocket?
-- laravel-websoket ... soketi works faster and has better scalability (as of May 2022)  
-- ratchet ... [ratchet doesn't support wamp v2](https://github.com/ratchetphp/Ratchet/issues/168#issuecomment-55339203), so you must find a client that supports wamp v1, or use [ocpp1.6](https://github.com/ratchetphp/Ratchet/issues/717). (as of May 2022)  
-- Thruway ... This supports wamp v2, and it seems it is working well, but I feel documentation is not enough. (as of May 2022)  
+Why? Because number of concurrent connections toward the "stream" API (that is a SSE endpoint) is limited to only 10 because of how php-fpm works.  
+You can see your browser hangs if you open 11th tab of https://localhost:8081/  
   
-See also: [laravel doc](https://laravel.com/docs/9.x/broadcasting#open-source-alternatives)
+You can set "retry" parameter so that the EventResource retries calling the endpoint when no updated is detected, and remove the infinite loop from the endpoint so that we don't need to hold concurrent persistent connections, but wihtout concurrent persistent connections, this is just a "polling" in my opinion, not "server side events".
 
-### Notice
-Though I may update later, this project is using "sync" for its queue backend.  
-This is because this project is using redis cluster and [queue with redis cluster is a bit complicated](https://stackoverflow.com/questions/41091103/laravel-predis-redis-cluster-moved-no-connection-to-127-0-0-16379).  
-Depending on your situation, you may need to change the queue backend to "redis", DB or other choices.
+For real server side events, I think you need something that can handle multiple concurrent persistent connections like Node.js.

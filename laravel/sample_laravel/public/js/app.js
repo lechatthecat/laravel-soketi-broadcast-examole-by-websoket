@@ -2145,13 +2145,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       // 古いブラウザーのサポートのためにはEventSourceはpollyfillが必要
       this.evtSource = new EventSource('/api/stream');
       this.evtSource.addEventListener('message', function (event) {
-        if (event.data.length > 0) {
-          JSON.parse(event.data).forEach(function (message) {
-            _this.receivedMessages.push(message);
-          });
-        }
+        JSON.parse(event.data).forEach(function (message) {
+          _this.receivedMessages.push(message);
+        });
       }, false);
-      this.evtSource.addEventListener('heeartbeat', function (event) {}, false);
 
       this.evtSource.onopen = function () {
         console.log("Opened.");
@@ -2161,12 +2158,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log(e);
       };
 
-      this.evtSource.onerror = function (e) {
+      this.evtSource.onerror = function (e) {// console.error(e);
+        // 正常にステータス200で結果がAPIから返却された場合もエラーイベントが発火する?
+        // https://stackoverflow.com/questions/47179556/why-am-i-seeing-unspecified-sse-errors-using-js-server-sent-events-with-php
+        //this.evtSource.close();
+        //this.reconnectFunc();
+      };
+
+      this.evtSource.onclose = function (e) {
         // console.error(e);
         // 正常にステータス200で結果がAPIから返却された場合もエラーイベントが発火する?
         // https://stackoverflow.com/questions/47179556/why-am-i-seeing-unspecified-sse-errors-using-js-server-sent-events-with-php
-        _this.evtSource.close();
-
+        //this.evtSource.close();
         _this.reconnectFunc();
       };
     },
@@ -22457,7 +22460,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "chat-header" }, [
-      _c("h2", [_vm._v("Sever Side Events Demo")]),
+      _c("h2", [_vm._v("Server Side Events Demo")]),
     ])
   },
   function () {

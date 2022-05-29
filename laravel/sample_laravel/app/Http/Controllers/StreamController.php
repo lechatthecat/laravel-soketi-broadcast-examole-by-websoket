@@ -15,15 +15,18 @@ class StreamController extends Controller
      */
     public function stream()
     {
+        session_write_close(); 
+        session_commit();
         return response()->stream(function() {
-            session_write_close();
             set_time_limit(300);
-            if (ob_get_level() == 0) {ob_start();}
             $id = mt_rand(100000,999999); 
             $lastMessage = Message::latest('id')->first(); 
             $now = Carbon::now()->format('Y-m-d H:i:s.u');
             $lastMessage = is_null($lastMessage) ? $now : Carbon::parse($lastMessage->created_at)->format('Y-m-d H:i:s.u');
-            for ($i=0;$i<100;$i++) {
+            session_write_close(); 
+            session_commit();
+            if (ob_get_level() == 0) {ob_start();}
+            for ($i=0;$i<300;$i++) {
                 Log::debug("$id: loop $i");
                 if (connection_aborted() || connection_status() != CONNECTION_NORMAL) {
                     break;
@@ -34,19 +37,15 @@ class StreamController extends Controller
                 if (!$storedMessages->isEmpty()) {
                     \Cache::forget('stored_messages');
                     $lastMessage = Carbon::parse($storedMessages->last()->created_at)->format('Y-m-d H:i:s.u');
-                    echo "event: heartbeat\ndata:\n\n";
                     echo "event: message\n", "data: " . json_encode($storedMessages), "\n\n";
-                } else {
-                    echo "event: heartbeat\ndata:\n\n";
                 }
+                echo "\n\n";
                 ob_flush();
                 flush();
-                usleep( 3000 * 1000 ); // 3秒のスリープ
-                clearstatcache();
+                sleep(1);
             }
             ob_end_flush();
         }, 200, [
-            'Access-Control-Allow-Origin' => 'no',
             'Cache-Control' => 'no-cache',
             'Content-Type' => 'text/event-stream',
             'Connection' => 'keep-alive',

@@ -3,7 +3,7 @@
         <div id="chat-page">
             <div class="chat-container">
                 <div class="chat-header">
-                    <h2>Sever Side Events Demo</h2>
+                    <h2>Server Side Events Demo</h2>
                 </div>
                 <ul id="messageArea" class="messageArea">
                     <li v-for="message in receivedMessages" :key="message.id">
@@ -39,13 +39,9 @@
                 // 古いブラウザーのサポートのためにはEventSourceはpollyfillが必要
                 this.evtSource = new EventSource('/api/stream');
                 this.evtSource.addEventListener('message', event => {
-                    if (event.data.length > 0) { 
-                        JSON.parse(event.data).forEach(message => {
-                            this.receivedMessages.push(message);
-                        });
-                    }
-                }, false);
-                this.evtSource.addEventListener('heeartbeat', event => {
+                    JSON.parse(event.data).forEach(message => {
+                        this.receivedMessages.push(message);
+                    });
                 }, false);
                 this.evtSource.onopen = () => {
                     console.log("Opened.");
@@ -57,7 +53,14 @@
                     // console.error(e);
                     // 正常にステータス200で結果がAPIから返却された場合もエラーイベントが発火する?
                     // https://stackoverflow.com/questions/47179556/why-am-i-seeing-unspecified-sse-errors-using-js-server-sent-events-with-php
-                    this.evtSource.close();
+                    //this.evtSource.close();
+                    //this.reconnectFunc();
+                };
+                this.evtSource.onclose= (e) => {
+                    // console.error(e);
+                    // 正常にステータス200で結果がAPIから返却された場合もエラーイベントが発火する?
+                    // https://stackoverflow.com/questions/47179556/why-am-i-seeing-unspecified-sse-errors-using-js-server-sent-events-with-php
+                    //this.evtSource.close();
                     this.reconnectFunc();
                 };
             },
