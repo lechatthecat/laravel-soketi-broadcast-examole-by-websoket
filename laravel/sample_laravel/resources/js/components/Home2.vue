@@ -3,7 +3,7 @@
         <div id="chat-page">
             <div class="chat-container">
                 <div class="chat-header">
-                    <h2>WebSocket Demo</h2>
+                    <h2>Sever Side Events 2 Demo</h2>
                 </div>
                 <ul id="messageArea" class="messageArea">
                     <li v-for="msg in messageReceived" :key="msg.id">
@@ -31,15 +31,7 @@
             }
         },
         mounted() {
-            // main.js
-            console.log("################2");
-            Echo.channel(`testchannel2`)
-                .listen('TestEvent2', (e) => {
-                    console.log(e);
-                    this.num = this.num + 1;
-                    e['id'] = this.num;
-                    this.messageReceived.push(e);
-                });
+
         },
         methods: {
             send (event) {

@@ -28,18 +28,6 @@
  import Echo from 'laravel-echo';
  Vue.use(VueRouter);
  Vue.use(VueAxios, axios);
- window.Pusher = require('pusher-js');
- window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: 'app-key',
-    wsHost: '127.0.0.1',
-    wsPort: '6001',
-    //wssPort: process.env.MIX_PUSHER_PORT,
-    forceTLS: false,
-    encrypted: false,
-    disableStats: true,
-    enabledTransports: ['ws'],
- });
 
  const router = new VueRouter({
      mode: 'history',

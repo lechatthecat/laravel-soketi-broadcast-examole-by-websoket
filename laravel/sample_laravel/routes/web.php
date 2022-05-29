@@ -13,4 +13,4 @@ use App\Http\Controllers\SPAController;
 |
 */
 
-Route::get('/{any}',  [SPAController::class, 'index'])->where('any', '.*');
+Route::get('{all}',  [SPAController::class, 'index'])->where('all', '^((?!api).)*');
