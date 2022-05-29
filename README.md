@@ -1,4 +1,4 @@
-# laravel-soketi-broadcast-example-by-websocket
+# laravel-sse-example
 ## Prerequisites
 - Docker
 - docker-compose
