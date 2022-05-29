@@ -38,11 +38,15 @@
             setupEventSource() {
                 // 古いブラウザーのサポートのためにはEventSourceはpollyfillが必要
                 this.evtSource = new EventSource('/api/stream');
-                this.evtSource.addEventListener('ping', event => {
-                    JSON.parse(event.data).forEach(message => {
-                        this.receivedMessages.push(message);
-                    });
-                });
+                this.evtSource.addEventListener('message', event => {
+                    if (event.data.length > 0) { 
+                        JSON.parse(event.data).forEach(message => {
+                            this.receivedMessages.push(message);
+                        });
+                    }
+                }, false);
+                this.evtSource.addEventListener('heeartbeat', event => {
+                }, false);
                 this.evtSource.onopen = () => {
                     console.log("Opened.");
                 };
@@ -51,7 +55,7 @@
                 };
                 this.evtSource.onerror = (e) => {
                     // console.error(e);
-                    // 正常にステータス200で結果がAPIから返却された場合もエラーイベントが発火する
+                    // 正常にステータス200で結果がAPIから返却された場合もエラーイベントが発火する?
                     // https://stackoverflow.com/questions/47179556/why-am-i-seeing-unspecified-sse-errors-using-js-server-sent-events-with-php
                     this.evtSource.close();
                     this.reconnectFunc();
@@ -59,8 +63,8 @@
             },
             async reconnectFunc () {
                 console.log("Trying to reconnect.");
-                await new Promise(resolve => setTimeout(resolve, 5000));
-                setTimeout(this.setupEventSource(), this.reconnectFrequencyMilliseconds) 
+                await new Promise(resolve => setTimeout(resolve, this.reconnectFrequencyMilliseconds));
+                this.setupEventSource();
             },
         }
     }

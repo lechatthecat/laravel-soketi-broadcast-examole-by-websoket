@@ -2142,12 +2142,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     setupEventSource: function setupEventSource() {
       var _this = this;
 
+      // 古いブラウザーのサポートのためにはEventSourceはpollyfillが必要
       this.evtSource = new EventSource('/api/stream');
-      this.evtSource.addEventListener('ping', function (event) {
-        JSON.parse(event.data).forEach(function (message) {
-          _this.receivedMessages.push(message);
-        });
-      });
+      this.evtSource.addEventListener('message', function (event) {
+        if (event.data.length > 0) {
+          JSON.parse(event.data).forEach(function (message) {
+            _this.receivedMessages.push(message);
+          });
+        }
+      }, false);
+      this.evtSource.addEventListener('heeartbeat', function (event) {}, false);
 
       this.evtSource.onopen = function () {
         console.log("Opened.");
@@ -2159,7 +2163,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       this.evtSource.onerror = function (e) {
         // console.error(e);
-        // 正常にステータス200で結果がAPIから返却された場合もエラーイベントが発火する
+        // 正常にステータス200で結果がAPIから返却された場合もエラーイベントが発火する?
         // https://stackoverflow.com/questions/47179556/why-am-i-seeing-unspecified-sse-errors-using-js-server-sent-events-with-php
         _this.evtSource.close();
 
@@ -2177,11 +2181,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 console.log("Trying to reconnect.");
                 _context.next = 3;
                 return new Promise(function (resolve) {
-                  return setTimeout(resolve, 5000);
+                  return setTimeout(resolve, _this2.reconnectFrequencyMilliseconds);
                 });
 
               case 3:
-                setTimeout(_this2.setupEventSource(), _this2.reconnectFrequencyMilliseconds);
+                _this2.setupEventSource();
 
               case 4:
               case "end":
