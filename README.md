@@ -22,16 +22,17 @@ $ sh -x /laravel_build.sh
 $ php artisan migrate
 $ npm run watch
 ```
-Then see https://localhost:8081/
+Then see https://localhost:8081/  
 You can see laravel is working on docker there.  
    
-Now you can broadcast a event by accessing this url from your browser:
-https://localhost:8081/api/store_message
-It is using server side events to broadcast the event.
+Now you can broadcast a event by accessing this url from your browser:  
+https://localhost:8081/api/store_message  
+It is using server side events to broadcast the event.  
 But this project (or SSE with PHP/PHP-fpm) is not so meaningful.   
   
 Why? Because number of concurrent connections toward the "stream" API (that is a SSE endpoint) is limited to only 10 because of how php-fpm works.  
 You can see your browser hangs if you open 11th tab of https://localhost:8081/  
+The number of concurrent persistent connections can be increased by changing number of "pm.max_children = 10", but this number cannot be increased to a big number, or your server will crash.
   
 You can set "retry" parameter so that the EventResource retries calling the endpoint when no updated is detected, and remove the infinite loop from the endpoint so that we don't need to hold concurrent persistent connections, but wihtout concurrent persistent connections, this is just a "polling" in my opinion, not "server side events".
 
