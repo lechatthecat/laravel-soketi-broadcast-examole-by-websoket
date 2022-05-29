@@ -25,12 +25,11 @@ $ npm run watch
 Then see https://localhost:8081/  
 You can see laravel is working on docker there.  
    
-Now you can broadcast a event by accessing this url from your browser:  
+Now you can broadcast a message by accessing this url from your browser:  
 https://localhost:8081/api/store_message  
 It is using server side events to broadcast the event.  
-But this project (or SSE with PHP/PHP-fpm) is not so meaningful.   
+But please note that number of concurrent connections toward the "stream" API (that is a SSE endpoint) is limited to only 10 because of how php-fpm works.  
   
-Why? Because number of concurrent connections toward the "stream" API (that is a SSE endpoint) is limited to only 10 because of how php-fpm works.  
 You can see your browser hangs if you open 11th tab of https://localhost:8081/  
 The number of concurrent persistent connections can be increased by changing number of "pm.max_children = 10", but this number cannot be increased to a big number, or your server will crash. php-fpm conf file is here: {this project's root path}/docker/laravel/php-fpm.conf
   
