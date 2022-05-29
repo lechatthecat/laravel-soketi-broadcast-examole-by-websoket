@@ -6,7 +6,7 @@
 ## How to use
 Run this program as follows:
 ```
-$ git clone https://github.com/lechatthecat/laravel-soketi-broadcast-example-by-websocket
+$ git clone -b http2_server_side_events https://github.com/lechatthecat/laravel-soketi-broadcast-example-by-websocket
 ```
 Please note that the server is using http2, so you need "server.crt" and "server.key" in "{this project's root path}/docker/nginx/cert" for SSL connection.
 
