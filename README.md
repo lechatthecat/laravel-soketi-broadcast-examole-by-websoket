@@ -12,7 +12,7 @@ Please note that the server is using http2, so you need "server.crt" and "server
 
 Also, you need a DB. Please access "mydb" container. The password of root is "root". Then create a database named as "laravel".
 
-After creating the certificate, please run these commands:
+After creating the certificate and DB, please run these commands:
 ```
 $ cd laravel-soketi-broadcast-example-by-websocket
 $ docker-compose up -d --build
