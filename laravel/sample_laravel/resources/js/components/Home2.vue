@@ -32,9 +32,9 @@
         },
         mounted() {
             // main.js
-            console.log("################2");
-            Echo.channel(`testchannel2`)
-                .listen('TestEvent2', (e) => {
+            console.log("################");
+            Pusher.subscribe('testchannel2')
+                .bind('App\\Events\\TestEvent2', (e) => {
                     console.log(e);
                     this.num = this.num + 1;
                     e['id'] = this.num;
