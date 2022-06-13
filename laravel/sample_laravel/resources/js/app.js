@@ -7,7 +7,7 @@
  require('./bootstrap');
 
  window.Vue = require('vue').default;
- 
+
  /**
   * The following block of code may be used to automatically register your
   * Vue components. It will recursively scan this directory for the Vue
@@ -15,12 +15,12 @@
   *
   * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
   */
- 
+
  // const files = require.context('./', true, /\.vue$/i)
  // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
- 
+
  //Vue.component('example-component', require('./components/ExampleComponent.vue').default);
- 
+
  import axios from 'axios';
  import VueAxios from 'vue-axios';
  import VueRouter from 'vue-router';
@@ -28,18 +28,15 @@
  import Echo from 'laravel-echo';
  Vue.use(VueRouter);
  Vue.use(VueAxios, axios);
- window.Pusher = require('pusher-js');
- window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: 'app-key',
+ const PusherJS = require('pusher-js');
+ window.Pusher = new PusherJS('app-key', {
     wsHost: '127.0.0.1',
-    wsPort: '6001',
-    //wssPort: process.env.MIX_PUSHER_PORT,
+    wsPort: 6001,
     forceTLS: false,
-    encrypted: false,
+    encrypted: true,
     disableStats: true,
-    enabledTransports: ['ws'],
- });
+    enabledTransports: ['ws', 'wss'],
+});
 
  const router = new VueRouter({
      mode: 'history',
@@ -57,8 +54,8 @@
   * the page. Then, you may begin adding components to this application
   * or customize the JavaScript scaffolding to fit your unique needs.
   */
- 
- const app = new Vue({
+
+ export default app = new Vue({
      el: '#app',
      router: router,
      render: h => h(App),

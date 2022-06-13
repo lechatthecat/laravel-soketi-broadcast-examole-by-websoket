@@ -33,8 +33,8 @@
         mounted() {
             // main.js
             console.log("################1");
-            Echo.channel(`testchannel`)
-                .listen('TestEvent', (e) => {
+            Echo.subscribe(`testchannel`)
+                .bind('TestEvent', (e) => {
                     console.log(e);
                     this.num = this.num + 1;
                     e['id'] = this.num;
